@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import {createHmac} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
-import {verifyTelegram,depositFor,cartInput} from '../lib/security.mjs';
+import {verifyTelegram,depositFor,cartInput,authenticateUser} from '../lib/security.mjs';
+test('explicit test access allows browser admin without a bot',async()=>{const u=await authenticateUser('',undefined,'true','site-user');assert.equal(u.admin,true);assert.equal(u.testMode,true);assert.equal(u.id,'test:site-user')});
+test('test bypass is disabled by default and does not accept truthy variants',async()=>{for(const flag of [undefined,'false','TRUE','1',''])await assert.rejects(()=>authenticateUser('',undefined,flag));});
 function signed(id,date=1000){const data=new URLSearchParams({auth_date:String(date),user:JSON.stringify({id,first_name:'Buyer'}),query_id:'query'});const check=[...data.entries()].sort(([a],[b])=>a<b?-1:a>b?1:0).map(([k,v])=>`${k}=${v}`).join('\n');const secret=createHmac('sha256','WebAppData').update('test-token').digest();data.set('hash',createHmac('sha256',secret).update(check).digest('hex'));return data.toString()}
 test('verified admin allowlist and ordinary customer',async()=>{assert.equal((await verifyTelegram(signed(6088315974),'test-token',1000)).admin,true);assert.equal((await verifyTelegram(signed(1246079025),'test-token',1000)).admin,true);assert.equal((await verifyTelegram(signed(777),'test-token',1000)).admin,false)});
 test('forged user, expired session, duplicates and missing bot are rejected',async()=>{await assert.rejects(()=>verifyTelegram(signed(777).replace('777','6088315974'),'test-token',1000));await assert.rejects(()=>verifyTelegram(signed(777),'test-token',100000));await assert.rejects(()=>verifyTelegram(signed(777)+'&user=x','test-token',1000));await assert.rejects(()=>verifyTelegram(signed(777),'',1000));await assert.rejects(()=>verifyTelegram(signed(777,2000),'test-token',1000))});

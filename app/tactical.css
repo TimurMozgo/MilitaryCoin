@@ -71,3 +71,5 @@ h2{font-family:var(--title);font-weight:500;letter-spacing:.3px;color:var(--sand
 .edit-images img{border-radius:3px}.edit-images button{background:#202b19;color:#e3d8ae;border:1px solid #849366;border-radius:3px}.notice.error{background:#3c241d;border:1px solid #774c38;color:#f2b6a3;border-radius:3px}.toast{background:#36462a;color:#e3e9d5;border:1px solid #7b9060;border-radius:4px;box-shadow:0 6px 28px #0008}.skeleton-grid>div{border-radius:3px;background:linear-gradient(100deg,#252d22,#343f2d,#252d22);background-size:200% 100%}
 @media(min-width:700px){.modal:not(.fullscreen){border-radius:6px}}
 @media(max-width:360px){.app-header .eyebrow{font-size:11px;letter-spacing:.5px}.header-detail{font-size:9px}.page-heading .eyebrow{font-size:8px;letter-spacing:1px}.product-card{padding:6px 6px 10px}.product-card h2{font-size:12px;min-height:36px}.card-price strong{font-size:21px}.small-add{width:36px;height:39px}.stock{font-size:9px}.product-grid{gap:18px 11px}.purchase-bar .primary{font-size:14px}}
+
+.test-access-note{margin:16px 0 0;padding:10px 12px;background:#342b1c;border:1px solid #6f5933;color:#e7ca93;font-size:11px;line-height:1.5;border-radius:3px}
