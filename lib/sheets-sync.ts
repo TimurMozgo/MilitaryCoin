@@ -1,15 +1,4 @@
 import {AppError} from './security.mjs';
-
-export async function authorizeSheets(req:Request,secret?:string){
- if(!secret||secret.length<32)throw new AppError('Синхронизация не подключена.',503);
- const supplied=req.headers.get('x-sheets-sync-key')||'';
- const enc=new TextEncoder();
- const [a,b]=await Promise.all([secret,supplied].map(v=>crypto.subtle.digest('SHA-256',enc.encode(v))));
- let diff=0;const aa=new Uint8Array(a),bb=new Uint8Array(b);
- for(let i=0;i<aa.length;i++)diff|=aa[i]^bb[i];
- if(diff)throw new AppError('Нет доступа.',403);
-}
-
 export async function sheetsChanges(db:D1Database,req:Request){
  const cursor=Number(new URL(req.url).searchParams.get('after')||'0');
  if(!Number.isSafeInteger(cursor)||cursor<0)throw new AppError('Некорректный курсор.');
@@ -29,4 +18,34 @@ export async function sheetsChanges(db:D1Database,req:Request){
   }
  }
  return {schemaVersion:1,nextCursor:page.at(-1)?.seq||cursor,hasMore:events.length>100,products,orders,items,movements};
+}
+
+export async function pushSheets(db:D1Database,url?:string,key?:string){
+ if(!url||!key)return {connected:false};
+ if(!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(url)||key.length<32)throw new Error('Invalid Sheets configuration');
+ const now=Date.now(),lease=JSON.stringify({id:crypto.randomUUID(),until:now+120000});
+ await db.prepare("INSERT OR IGNORE INTO settings(key,value) VALUES ('sheets_lease','')").run();
+ const previous=await db.prepare("SELECT value FROM settings WHERE key='sheets_lease'").first<any>();
+ if(previous.value&&JSON.parse(previous.value).until>now)return {busy:true};
+ const claimed=await db.prepare("UPDATE settings SET value=? WHERE key='sheets_lease' AND value=?").bind(lease,previous.value).run();
+ if(!claimed.meta.changes)return {busy:true};
+ try{
+  const state=await db.prepare("SELECT value FROM settings WHERE key='sheets_cursor'").first<any>();
+  const cursor=Number(state?.value||'0');
+  const data=await sheetsChanges(db,new Request('https://internal/sync?after='+cursor));
+  if(data.nextCursor===cursor)return {ok:true,cursor};
+  const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key,data}),redirect:'follow',signal:AbortSignal.timeout(15000)});
+  if(!response.ok)throw new Error('Sheets HTTP '+response.status);
+  const ack=await response.json() as {ok?:boolean;cursor?:number};
+  if(!ack.ok||ack.cursor!==data.nextCursor)throw new Error('Sheets acknowledgement failed');
+  await db.batch([
+   db.prepare("INSERT INTO settings(key,value) VALUES ('sheets_cursor',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(String(data.nextCursor)),
+   db.prepare("INSERT INTO settings(key,value) VALUES ('sheets_last_success',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(String(Date.now())),
+   db.prepare("DELETE FROM settings WHERE key='sheets_last_error'")
+  ]);
+  return {ok:true,cursor:data.nextCursor,hasMore:data.hasMore};
+ }catch(e){
+  await db.prepare("INSERT INTO settings(key,value) VALUES ('sheets_last_error',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind('Ошибка отправки. Запись сохранена в очереди.').run();
+  throw e;
+ }finally{await db.prepare("UPDATE settings SET value='' WHERE key='sheets_lease' AND value=?").bind(lease).run();}
 }

@@ -15,6 +15,13 @@
       "tag": "0001_sheets_sync",
       "breakpoints": true,
       "version": "6"
+    },
+    {
+      "tag": "0002_telegram_identity",
+      "when": 1792701000000,
+      "version": "6",
+      "breakpoints": true,
+      "idx": 2
     }
   ]
 }
