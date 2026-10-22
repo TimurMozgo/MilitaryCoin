@@ -1,8 +1,8 @@
 import { env } from 'cloudflare:workers';
-import { AppError, authenticateUser, depositFor, integer, text, cartInput } from './security.mjs';
-const bindings=()=>env as unknown as {DB:D1Database;BUCKET:R2Bucket;TELEGRAM_BOT_TOKEN?:string;TELEGRAM_BOT_USERNAME?:string;TEST_ADMIN_ACCESS?:string};
+import { AppError, verifyTelegram, depositFor, integer, text, cartInput } from './security.mjs';
+const bindings=()=>env as unknown as {DB:D1Database;BUCKET:R2Bucket;TELEGRAM_BOT_TOKEN?:string;TELEGRAM_BOT_USERNAME?:string};
 const db=()=>{const d=bindings().DB;if(!d)throw new AppError('Хранилище временно недоступно.',503);return d};
-async function auth(req:Request,admin=false){const b=bindings();const u=await authenticateUser(req.headers.get('x-telegram-init-data'),b.TELEGRAM_BOT_TOKEN,b.TEST_ADMIN_ACCESS,req.headers.get('oai-authenticated-user-id')||'');if(admin&&!u.admin)throw new AppError('Нет доступа.',403);return u}
+async function auth(req:Request,admin=false){const b=bindings();const u=await verifyTelegram(req.headers.get('x-telegram-init-data'),b.TELEGRAM_BOT_TOKEN);if(admin&&!u.admin)throw new AppError('Нет доступа.',403);return u}
 const json=(v:unknown,status=200)=>Response.json(v,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 async function body(req:Request){if(Number(req.headers.get('content-length')||0)>60000)throw new AppError('Слишком большой запрос.',413);const raw=await req.text();if(raw.length>60000)throw new AppError('Слишком большой запрос.',413);try{return JSON.parse(raw)}catch{throw new AppError('Некорректный запрос.')}}
 function product(p:any){return {...p,images:JSON.parse(p.images),active:!!p.active}}
