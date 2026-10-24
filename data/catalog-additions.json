@@ -1,0 +1,146 @@
+[
+  {
+    "id": "sso-2022",
+    "name": "Силы специальных операций ВСУ",
+    "description": "Памятная монета Украины, посвящённая Силам специальных операций. На аверсе — эмблема ССО; на реверсе образ современного бойца объединён с силуэтом Святослава Храброго. Номинал — 10 гривен.",
+    "price": 13000,
+    "stock": 0,
+    "images": [
+      "/coins/sso-2022-2.webp",
+      "/coins/sso-2022-1.webp"
+    ],
+    "year": "2022",
+    "denomination": "10 гривен",
+    "category_id": "forces",
+    "image_source": "https://moneteka.com/coin/2160/syly-spetsialnykh-operatsiy-zbroynykh-syl-ukrayiny-2022",
+    "price_source": "https://topcoins.com.ua/rizni-moneti/"
+  },
+  {
+    "id": "air-2020",
+    "name": "Воздушные силы ВСУ",
+    "description": "Монета посвящена Воздушным силам Украины. Дизайн сочетает эмблему рода войск и изображение боевого самолёта. Выпуск Национального банка Украины. Номинал — 10 гривен.",
+    "price": 14000,
+    "stock": 0,
+    "images": [
+      "/coins/air-2020-2.webp",
+      "/coins/air-2020-1.webp"
+    ],
+    "year": "2020",
+    "denomination": "10 гривен",
+    "category_id": "forces",
+    "image_source": "https://moneteka.com/coin/2065/povitryani-syly-zbroynykh-syl-ukrayiny-2020",
+    "price_source": "https://topcoins.com.ua/rizni-moneti/"
+  },
+  {
+    "id": "border-2020",
+    "name": "Государственная пограничная служба Украины",
+    "description": "Монета в честь Государственной пограничной службы Украины. В оформлении использованы её эмблема, контур страны и символы охраны границы на суше, в воздухе и на море. Номинал — 10 гривен.",
+    "price": 14000,
+    "stock": 0,
+    "images": [
+      "/coins/border-2020-2.webp",
+      "/coins/border-2020-1.webp"
+    ],
+    "year": "2020",
+    "denomination": "10 гривен",
+    "category_id": "forces",
+    "image_source": "https://moneteka.com/coin/2074/derzhavna-prykordonna-sluzhba-ukrayiny-2020",
+    "price_source": "https://topcoins.com.ua/rizni-moneti/"
+  },
+  {
+    "id": "land-2021",
+    "name": "Сухопутные войска ВСУ",
+    "description": "Памятная монета, посвящённая Сухопутным войскам Вооружённых сил Украины. Выпуск Национального банка Украины 2021 года для тематической военной коллекции. Номинал — 10 гривен.",
+    "price": 13000,
+    "stock": 0,
+    "images": [
+      "/coins/land-2021-2.webp",
+      "/coins/land-2021-1.webp"
+    ],
+    "year": "2021",
+    "denomination": "10 гривен",
+    "category_id": "forces",
+    "image_source": "https://moneteka.com/coin/2136/sukhoputni-viyska-zbroynykh-syl-ukrayiny-2021",
+    "price_source": "https://topcoins.com.ua/rizni-moneti/"
+  },
+  {
+    "id": "afu-2021",
+    "name": "Вооружённые силы Украины",
+    "description": "Памятная монета в честь Вооружённых сил Украины. На реверсе объединены военные знаки различия разных родов войск. Номинал — 10 гривен.",
+    "price": 13000,
+    "stock": 0,
+    "images": [
+      "/coins/afu-2021-2.webp",
+      "/coins/afu-2021-1.webp"
+    ],
+    "year": "2021",
+    "denomination": "10 гривен",
+    "category_id": "forces",
+    "image_source": "https://moneteka.com/coin/2135/zbroyni-syly-ukrayiny-2021",
+    "price_source": "https://topcoins.com.ua/rizni-moneti/"
+  },
+  {
+    "id": "volunteer-2018",
+    "name": "День украинского добровольца",
+    "description": "Памятная монета в честь украинских добровольцев, вставших на защиту страны. Выпущена Национальным банком Украины в 2018 году. Номинал — 10 гривен.",
+    "price": 30000,
+    "stock": 0,
+    "images": [
+      "/coins/volunteer-2018-2.webp",
+      "/coins/volunteer-2018-1.webp"
+    ],
+    "year": "2018",
+    "denomination": "10 гривен",
+    "category_id": "memory",
+    "image_source": "https://moneteka.com/coin/1955/den-ukrayinskoho-dobrovoltsya-2018",
+    "price_source": "https://topcoins.com.ua/rizni-moneti/"
+  },
+  {
+    "id": "cyborgs-2018",
+    "name": "Защитникам Донецкого аэропорта — Киборги",
+    "description": "Монета посвящена защитникам Донецкого аэропорта. На реверсе — воин на фоне разрушенной башни, украинский флаг и надпись «КІБОРГИ». Номинал — 10 гривен.",
+    "price": 39000,
+    "stock": 0,
+    "images": [
+      "/coins/cyborgs-2018-2.webp",
+      "/coins/cyborgs-2018-1.webp"
+    ],
+    "year": "2018",
+    "denomination": "10 гривен",
+    "category_id": "memory",
+    "image_source": "https://moneteka.com/coin/1950/zakhysnykam-donetskoho-aeroportu-kiborhy-2018",
+    "price_source": "https://topcoins.com.ua/rizni-moneti/"
+  },
+  {
+    "id": "kraz-2019",
+    "name": "КрАЗ-6322 «Солдат»",
+    "description": "Монета посвящена украинскому полноприводному автомобилю КрАЗ-6322 «Солдат». На реверсе изображён грузовик, поднимающийся вверх и оставляющий след протектора. Номинал — 10 гривен.",
+    "price": 20000,
+    "stock": 0,
+    "images": [
+      "/coins/kraz-2019-2.webp",
+      "/coins/kraz-2019-1.webp"
+    ],
+    "year": "2019",
+    "denomination": "10 гривен",
+    "category_id": "equipment",
+    "image_source": "https://moneteka.com/coin/2041/kraz-6322-soldat-2019",
+    "price_source": "https://topcoins.com.ua/rizni-moneti/"
+  },
+  {
+    "id": "medics-2019",
+    "name": "На страже жизни — военным медикам",
+    "description": "Монета посвящена военным медикам и их работе по спасению жизни. Выпущена Национальным банком Украины в 2019 году. Номинал — 10 гривен.",
+    "price": 19000,
+    "stock": 0,
+    "images": [
+      "/coins/medics-2019-2.webp",
+      "/coins/medics-2019-1.webp"
+    ],
+    "year": "2019",
+    "denomination": "10 гривен",
+    "category_id": "memory",
+    "image_source": "https://moneteka.com/coin/2042/na-varti-zhyttya-prysvyachuyetsya-viyskovym-medykam-2019",
+    "price_source": "https://topcoins.com.ua/rizni-moneti/"
+  }
+]
