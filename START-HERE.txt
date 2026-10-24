@@ -1,0 +1,33 @@
+MilitaryCoin
+
+PROJECT: D:\Projects\coin-shop
+
+Main files to edit:
+  app/shop.tsx             - screens, buttons, basket, forms (React/TypeScript)
+  app/armory.css           - metal textures, compact cards, current visual style
+  app/tactical.css         - tactical theme
+  app/globals.css          - basic layout and animations
+  public/                 - images and textures
+
+GitHub Pages:
+  browser-client/index.html - source HTML page
+  browser-client/main.tsx   - browser entry point and API server address
+  npm run build:pages       - generates index.html and docs/ for publication
+  git add .
+  git commit -m "Update MilitaryCoin"
+  git push origin main
+
+GitHub Pages publishes main / (root). index.html opens the application;
+docs/ contains its generated JavaScript, styles and images.
+Do not edit generated docs/assets files: rebuild them after editing source.
+
+Server:
+  lib/shop-server.ts        - API, orders, inventory, Telegram authorization
+  lib/sheets-sync.ts        - delivery to Google Sheets
+  integrations/google-sheets/ - Apps Script source
+The browser uses the existing hosted server; Google Sheets remains its
+automatically updated accounting copy. It is not a replacement for the API.
+
+The bot must still be connected for real Telegram login and checkout.
+Never commit .dev.vars, API secrets or bot tokens.
+Bot avatar artwork is stored separately: D:\MilitaryCoin-avatars
