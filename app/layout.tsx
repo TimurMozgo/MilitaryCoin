@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./tactical.css";
+import "./armory.css";
 
 export const metadata: Metadata = {
   title: "Коллекционные монеты",
