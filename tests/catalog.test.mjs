@@ -4,6 +4,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import {createHmac} from 'node:crypto';
 import {build} from 'esbuild';
+globalThis.fetch=async()=>Response.json({ok:true,result:{message_id:123}});
 const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');
 for(const file of readdirSync('drizzle').filter(f=>f.endsWith('.sql')).sort())sqlite.exec(readFileSync('drizzle/'+file,'utf8'));
 const DB={prepare(sql){let args=[];return {bind(...values){args=values;return this},async first(){return sqlite.prepare(sql).get(...args)||null},async all(){return {results:sqlite.prepare(sql).all(...args)}},async run(){return {meta:{changes:Number(sqlite.prepare(sql).run(...args).changes)}}}}},async batch(statements){sqlite.exec('BEGIN');try{const r=[];for(const s of statements)r.push(await s.run());sqlite.exec('COMMIT');return r}catch(e){sqlite.exec('ROLLBACK');throw e}}};
@@ -50,3 +51,5 @@ test('checkout validates Ukrainian phone and persists six-digit code on idempote
  assert.equal('image_source' in p,false);
 });
 
+
+test('notification deep links enforce order ownership and reviews notify once',async()=>{const order=sqlite.prepare('SELECT * FROM orders LIMIT 1').get();assert.equal((await request('orders/'+order.id,'GET',undefined,777)).status,404);assert.equal((await request('orders/'+order.id)).status,200);assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM telegram_outbox WHERE order_id=?').get(order.id).n,3);assert.equal((await request('admin/review','PUT',{id:order.id,status:'rejected',reason:'Не видно суму платежу'})).status,200);assert.equal((await request('admin/review','PUT',{id:order.id,status:'rejected',reason:'Не видно суму платежу'})).status,409);assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM telegram_outbox WHERE order_id=?').get(order.id).n,4);assert.equal(sqlite.prepare("SELECT state FROM telegram_outbox WHERE event='rejected'").get().state,'sent')});
