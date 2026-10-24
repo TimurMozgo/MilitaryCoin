@@ -34,3 +34,19 @@ test('product category and imported WebP photos remain editable, reject missing 
  const next=(await request('catalog')).data.products.find(x=>x.id===p.id);assert.equal(next.category_id,'memory');assert.deepEqual(next.images,p.images);
  const created=await request('admin/product','PUT',{...p,id:undefined,name:'New coin',category_id:'equipment'});assert.equal(created.status,200);
 });
+
+test('checkout validates Ukrainian phone and persists six-digit code on idempotent retry',async()=>{
+ await request('catalog');
+ sqlite.prepare("INSERT INTO media(id,owner,kind,mime,created_at) VALUES ('checkout-receipt',6088315974,'receipt','image/png',?)").run(Date.now());
+ sqlite.exec("INSERT OR REPLACE INTO settings(key,value) VALUES ('payment','Local test payment'); UPDATE products SET stock=5 WHERE id='dshv-2021'");
+ const p=(await request('catalog')).data.products.find(p=>p.id==='dshv-2021');
+ const body={requestKey:'checkout-idempotency-key',customer:'Олена Коваль',phone:'+380671234567',city:'Київ',branch:'12',receipt:'checkout-receipt',items:[{id:p.id,quantity:1,price:p.price}]};
+ for(const phone of ['23423424242342','+38012345678','+3801234567890','0671234567','+380abcdefghi'])assert.equal((await request('orders','POST',{...body,phone})).status,400);
+ assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM orders').get().n,0);
+ const first=await request('orders','POST',body);assert.equal(first.status,201,JSON.stringify(first.data));assert.match(first.data.order_code,/^[0-9]{6}$/);
+ const again=await request('orders','POST',body);assert.equal(again.data.order_code,first.data.order_code);assert.equal(again.data.id,first.data.id);
+ const saved=sqlite.prepare('SELECT * FROM orders WHERE id=?').get(first.data.id);assert.equal(saved.customer,body.customer);assert.equal(saved.phone,body.phone);assert.equal(saved.telegram_name,'Test');assert.equal(saved.user_id,'6088315974');
+ assert.equal(sqlite.prepare('SELECT stock FROM products WHERE id=?').get(p.id).stock,p.stock-1);
+ assert.equal('image_source' in p,false);
+});
+

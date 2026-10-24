@@ -4,8 +4,8 @@ import "./tactical.css";
 import "./armory.css";
 
 export const metadata: Metadata = {
-  title: "Коллекционные монеты",
-  description: "Монеты для вашей коллекции. Каталог, заказ и история покупок.",
+  title: "Колекційні монети",
+  description: "Монети для вашої колекції. Каталог, замовлення та історія покупок.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
+    <html lang="uk">
       <body className="antialiased">{children}</body>
     </html>
   );

@@ -1,7 +1,7 @@
 import {AppError} from './security.mjs';
 export async function sheetsChanges(db:D1Database,req:Request){
  const cursor=Number(new URL(req.url).searchParams.get('after')||'0');
- if(!Number.isSafeInteger(cursor)||cursor<0)throw new AppError('Некорректный курсор.');
+ if(!Number.isSafeInteger(cursor)||cursor<0)throw new AppError('Некоректний курсор.');
  const events=(await db.prepare('SELECT seq,kind,entity_id FROM sync_changes WHERE seq>? ORDER BY seq LIMIT 101').bind(cursor).all<any>()).results;
  const page=events.slice(0,100),products:any[]=[],orders:any[]=[],items:any[]=[],movements:any[]=[];
  const seen=new Set<string>();
@@ -45,7 +45,7 @@ export async function pushSheets(db:D1Database,url?:string,key?:string){
   ]);
   return {ok:true,cursor:data.nextCursor,hasMore:data.hasMore};
  }catch(e){
-  await db.prepare("INSERT INTO settings(key,value) VALUES ('sheets_last_error',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind('Ошибка отправки. Запись сохранена в очереди.').run();
+  await db.prepare("INSERT INTO settings(key,value) VALUES ('sheets_last_error',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind('Помилка надсилання. Запис збережено в черзі.').run();
   throw e;
  }finally{await db.prepare("UPDATE settings SET value='' WHERE key='sheets_lease' AND value=?").bind(lease).run();}
 }

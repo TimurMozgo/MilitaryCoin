@@ -29,6 +29,13 @@
       "when": 1792845593815,
       "tag": "0003_lowly_weapon_omega",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1792849980451,
+      "tag": "0004_slow_gamora",
+      "breakpoints": true
     }
   ]
 }
