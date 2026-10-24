@@ -1,9 +1,9 @@
 import {pushSheets} from './sheets-sync';
 import { env } from 'cloudflare:workers';
 import { AppError, verifyTelegram, depositFor, integer, text, cartInput } from './security.mjs';
-const bindings=()=>env as unknown as {DB:D1Database;BUCKET:R2Bucket;TELEGRAM_BOT_TOKEN?:string;TELEGRAM_BOT_USERNAME?:string;SHEETS_SYNC_KEY?:string;SHEETS_WEBHOOK_URL?:string};
+const bindings=()=>env as unknown as {DB:D1Database;BUCKET:R2Bucket;TELEGRAM_BOT_TOKEN?:string;TELEGRAM_BOT_ID?:string;TELEGRAM_BOT_USERNAME?:string;SHEETS_SYNC_KEY?:string;SHEETS_WEBHOOK_URL?:string};
 const db=()=>{const d=bindings().DB;if(!d)throw new AppError('Хранилище временно недоступно.',503);return d};
-async function auth(req:Request,admin=false){const b=bindings();const u=await verifyTelegram(req.headers.get('x-telegram-init-data'),b.TELEGRAM_BOT_TOKEN);if(admin&&!u.admin)throw new AppError('Нет доступа.',403);return u}
+async function auth(req:Request,admin=false){const b=bindings();const u=await verifyTelegram(req.headers.get('x-telegram-init-data'),{token:b.TELEGRAM_BOT_TOKEN,botId:b.TELEGRAM_BOT_ID});if(admin&&!u.admin)throw new AppError('Нет доступа.',403);return u}
 const json=(v:unknown,status=200)=>Response.json(v,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 async function body(req:Request){if(Number(req.headers.get('content-length')||0)>60000)throw new AppError('Слишком большой запрос.',413);const raw=await req.text();if(raw.length>60000)throw new AppError('Слишком большой запрос.',413);try{return JSON.parse(raw)}catch{throw new AppError('Некорректный запрос.')}}
 function product(p:any){return {...p,images:JSON.parse(p.images),active:!!p.active}}
